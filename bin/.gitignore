@@ -5,3 +5,6 @@
 /Main$SigmoidNeuron.class
 /Data.class
 /Picture.class
+/NeuralNetwork$MiniBatch.class
+/NeuralNetwork$SigmoidNeuron.class
+/NeuralNetwork.class
