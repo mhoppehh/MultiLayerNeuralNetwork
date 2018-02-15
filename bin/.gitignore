@@ -8,3 +8,7 @@
 /NeuralNetwork$MiniBatch.class
 /NeuralNetwork$SigmoidNeuron.class
 /NeuralNetwork.class
+/DynamicNeuralNetwork.class
+/DynamicNeuralNetwork$MiniBatch.class
+/DynamicNeuralNetwork$NeuralNetwork.class
+/DynamicNeuralNetwork$SigmoidNeuron.class

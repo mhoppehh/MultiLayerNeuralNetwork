@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-public class NeuralNetwork
+public class Main
 {
 
     int INPUT_NEURONS = 784;
