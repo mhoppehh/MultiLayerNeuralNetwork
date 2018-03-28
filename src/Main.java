@@ -120,70 +120,6 @@ public class Main
         }
     }
 
-    /*public void loadWB() throws FileNotFoundException, IOException{
-    BufferedReader reader;
-    File f;
-
-    //Output bias
-    f = new File("./ob_ted");
-    reader = new BufferedReader(new FileReader(f));
-    for (int i = 0; i < OUTPUT_NEURONS; i++) {
-    nn.output[i] = new SigmoidNeuron(0.0,new double[HIDDEN_NEURONS], 0.0, new double[HIDDEN_NEURONS]);
-    String bias = reader.readLine();
-    nn.output[i].bias = Double.parseDouble(bias);
-    }
-    reader.close();
-
-    // Output weights  
-    f = new File("./ow_ted");
-    reader = new BufferedReader(new FileReader(f));
-    for (int i = 0; i < OUTPUT_NEURONS; i++) {
-    for (int j = 0; j < HIDDEN_NEURONS; j++) {
-    String weight = reader.readLine();
-    nn.output[i].weights[j] = Double.parseDouble(weight);
-    }
-    }
-    reader.close();
-
-    // Hidden bias 
-    f = new File("./hb_ted");
-    reader = new BufferedReader(new FileReader(f));
-    for (int i = 0; i < HIDDEN_NEURONS; i++) {
-    nn.hidden[i] = new SigmoidNeuron(0.0,new double[784], 0.0, new double[784]);
-    String bias = reader.readLine();
-    nn.hidden[i].bias = Double.parseDouble(bias);
-    }
-    reader.close();
-
-    // Hidden weights  
-    f = new File("./hw_ted");
-    reader = new BufferedReader(new FileReader(f));
-    for (int i = 0; i < HIDDEN_NEURONS; i++) {
-    for (int j = 0; j < 784; j++) {
-    String weight = reader.readLine();
-    nn.hidden[i].weights[j] = Double.parseDouble(weight);
-    }
-    }
-    reader.close();
-    }
-
-    public ArrayList<String> getFiles(String dir) throws FileNotFoundException, IOException{
-    File folder = new File(dir);
-    File[] listOfFiles = folder.listFiles();
-    ArrayList<String> data = new ArrayList<String>();
-    for (File file : listOfFiles) {
-    BufferedReader reader = new BufferedReader(new FileReader(file));
-    String s = reader.readLine();
-    while(s != null){
-    data.add(s.replaceAll(" ", ""));
-    s = reader.readLine();
-    }
-    reader.close();
-    }
-    return data;
-    }
-     */
-
     public double[] feedForward(double [] a){
         double output[] = new double[OUTPUT_NEURONS];
         double sum;
@@ -217,36 +153,6 @@ public class Main
          */
         return output;
     }
-
-    /*public double[] feedBackward(double input[]) {
-    double temp[] = new double[HIDDEN_NEURONS];
-    double output[] = new double[INPUT_NEURONS];
-    for (int j = 0; j < HIDDEN_NEURONS; j++)
-    temp[j] = 0.0;
-    for (int i = 0; i < HIDDEN_NEURONS; i++){
-    for (int j = 0; j < OUTPUT_NEURONS; j++){
-    temp[i] += nn.output[j].weights[i] * input[j];
-    }
-    }
-    for (int i = 0; i < HIDDEN_NEURONS; i++){
-    for (int j = 0; j < 784; j++){
-    output[j] += nn.hidden[i].weights[j] * temp[i];
-    }
-    }
-    double min = output[0];
-    double max = output[0];
-    for (int j = 0; j < 784; j++){
-    if (output[j] > max)
-    max = output[j];
-    if (output[j] < min)
-    min = output[j];
-    }
-    for (int j = 0; j < 784; j++){
-    output[j] = Math.abs(output[j]) / (max - min);
-    }
-    return output;
-    }
-     */
 
     public void SGD(Data trainingData, int epochs, int miniBatchSize, int eta, Data testData){
         MiniBatch batch = new MiniBatch(new Picture[miniBatchSize], 0);

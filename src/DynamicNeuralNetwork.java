@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 public class DynamicNeuralNetwork
 {
@@ -64,7 +65,7 @@ public class DynamicNeuralNetwork
                     batch.pictures[j] = trainingData.data[idx];
                 }
                 if(batch.pictures[0] != null && batch.pictures[batch.pictures.length - 1] != null) ;
-//                    updateMiniBatch(batch, eta);
+                    updateMiniBatch(batch, eta);
             }
 
             if(testData != null){
@@ -265,6 +266,64 @@ public class DynamicNeuralNetwork
     private long stopTimer() {
     	return System.currentTimeMillis() - startTime;
     }
+    
+    int index = 0;
+    Data d = new Data(new Picture[169], 0);
+    ArrayList<double[]> outputs = new ArrayList<double[]>();
+
+    public void store(Picture p, double[] output){
+        if(this.d.nPics < this.d.data.length){
+            this.d.data[this.d.nPics] = p;
+            this.d.nPics++;
+            outputs.add(output);
+        }
+    }
+
+    public int maxd(double[] input){
+        double m = input[0];
+        int r = 0;
+        for(int i = 0; i < input.length; i++)
+            if(input[i] > m){
+                m = input[i];
+                r = i;
+            }
+        return r;
+    }
+
+    public int maxi(int[] input){
+        int m = input[0];
+        int r = 0;
+        for(int i = 0; i < input.length; i++)
+            if(input[i] > m){
+                m = input[i];
+                r = i;
+            }
+        return r;
+    }
+
+    public double[] cost_derivative(double[] output_a, int[] y){
+        double[] result = new double[output_a.length];
+        for(int i = 0; i < output_a.length; i++)
+            result[i] = output_a[i] - y[i];
+        return result;
+    }
+
+    public double[] sigmoid(double[] z){
+        double[] a = new double[z.length];
+        for(int i = 0; i < z.length; i++)
+            a[i] = 1.0 / (1.0 + Math.exp(-1*z[i]));
+        return a;
+    }
+
+//    public double[] sigmoid_prime(double[] z){
+//        double s[] = new double[HIDDEN_NEURONS];
+//        double result[] = new double[HIDDEN_NEURONS];
+//        s = sigmoid(z);
+//        for(int i = 0; i < z.length; i++)
+//            result[i] = s[i] * (1-s[i]);
+//        return result;  
+//    }
+
     
     /**
      * SigNeur holds the weights, bias, and deltas.
