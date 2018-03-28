@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
 
 public class DynamicNeuralNetwork
 {
@@ -22,6 +21,12 @@ public class DynamicNeuralNetwork
     	DynamicNeuralNetwork m = new DynamicNeuralNetwork();
     }
     
+    /**
+     * Constructor for the DynamicNeuralNetwork.
+     * Instantiates the NN.
+     * Randomizes the Neurons.
+     * Runs the NN through a given number of EPOCHS
+     */
     public DynamicNeuralNetwork() {
     	
     	GUI g = new GUI();
@@ -38,9 +43,78 @@ public class DynamicNeuralNetwork
     	int EPOCHS = 20;
         int M_BATCH_SIZE = 10;
         int LEARNING_RATE = 3;
+        
+        System.out.println("Training / Testing network...");
+        //SGD(d, EPOCHS, M_BATCH_SIZE, LEARNING_RATE, t);
+
+        System.out.println("Elapsed time was " + stopTimer() / 1000 + " seconds.");
     	
     }
     
+    private void SGD(Data trainingData, int epochs, int miniBatchSize, int eta, Data testData) {
+    	MiniBatch batch = new MiniBatch(new Picture[miniBatchSize], 0);
+
+        for(int e = 0; e < epochs; e++){
+            double numBatchs = trainingData.nPics / miniBatchSize;
+
+            for(int i = 0; i < numBatchs; i++){
+                batch.nPics = miniBatchSize;
+                for(int j = 0; j < miniBatchSize; j++){
+                    int idx = i * miniBatchSize + j;
+                    batch.pictures[j] = trainingData.data[idx];
+                }
+                if(batch.pictures[0] != null && batch.pictures[batch.pictures.length - 1] != null) ;
+//                    updateMiniBatch(batch, eta);
+            }
+
+            if(testData != null){
+//                int result = evaluate(testData);
+//                System.out.println("Epoch " + (e + 1) + " : " + result + " / " + testData.nPics);
+            }
+            else
+                System.out.println("Epoch " + (e + 1) + " complete.");
+        }
+    	
+    }
+    
+    void updateMiniBatch(MiniBatch batch, int eta){
+        int n = batch.nPics;
+
+        for(int i = 0; i < n; i++){
+            //backprop(batch.pictures[i]);
+            for(int j = 0; j < NUMBER_OUTPUT_NEURONS; j++){
+                double db = nn.output[j].dBias;
+                nn.output[j].bias -= db * eta / n;
+                for(int k = 0; k < NUMBER_HIDDEN_NEURONS[NUMBER_HIDDEN_NEURONS.length - 1]; k++){
+                    double dw = nn.output[j].dWeights[k];
+                    nn.output[j].weights[k] -= dw * eta / n;
+                }
+            }
+            for(int h = NUMBER_HIDDEN_NEURONS[NUMBER_HIDDEN_NEURONS.length - 1]; h > 0; h--){
+            	for(int j = 0; j < NUMBER_HIDDEN_NEURONS[h]; j++){
+	                double db = nn.hidden[h][j].dBias;
+	                for(int k = 0; k < NUMBER_HIDDEN_NEURONS[h - 1]; k++){
+	                    double dw = nn.hidden[h][j].dWeights[k];
+	                    nn.hidden[h][j].weights[k] -= dw * eta / n;
+	                }
+	                nn.hidden[h][j].bias -= db * eta / n;
+	            }
+            }
+
+            for(int j = 0; j < NUMBER_HIDDEN_NEURONS[0]; j++){
+                double db = nn.hidden[0][j].dBias;
+                for(int k = 0; k < NUMBER_INPUT_NEURONS; k++){
+                    double dw = nn.hidden[0][j].dWeights[k];
+                    nn.hidden[0][j].weights[k] -= dw * eta / n;
+                }
+                nn.hidden[0][j].bias -= db * eta / n;
+            }
+        }
+    }
+    
+    /**
+     * As a default, sets random values of the weights and biases of the SigmoidNeurons between -1 and 1.
+     */
     private void randomize_weights_biases() {
     	System.out.println("Assigning random values...");
     	for(int i = 0; i < NUMBER_HIDDEN_NEURONS.length; i++){
@@ -66,6 +140,16 @@ public class DynamicNeuralNetwork
         }
     }
     
+    /**
+     * Loads the training data from the given file.
+     * Because each piece of input and output pair is on a different line, outputs pertaining to the inputs above it.
+     * This method must know the length of the output and input arrays in the file to avoid a outOfBoundsException. 
+     * 
+     * @param file_name: String of the name of the file
+     * @param output_length: length of the output array
+     * @param input_length: length of the input array
+     * @return a data object containing the data from the file.
+     */
     private Data load_training_data(String file_name, int output_length, int input_length) {
     	Data d;
     	Picture pics[] = new Picture[TOTAL_DATA_SIZE];
@@ -104,7 +188,17 @@ public class DynamicNeuralNetwork
 			return null;
 		}
     }
-    
+
+    /**
+     * Loads the testing data from the given file.
+     * Because each piece of input and output pair is on a different line, outputs pertaining to the inputs above it.
+     * This method must know the length of the output and input arrays in the file to avoid a outOfBoundsException. 
+     * 
+     * @param file_name: String of the name of the file
+     * @param output_length: length of the output array
+     * @param input_length: length of the input array
+     * @return a data object containing the data from the file.
+     */
     private Data load_testing_data(String file_name, int output_length, int input_length) {
     	Data t;
     	Picture[] pics = new Picture[TEST];
@@ -209,5 +303,16 @@ public class DynamicNeuralNetwork
         }
     }
     
+    /**
+     * A mini-batch of Pictures
+     */
+    public class MiniBatch{
+        Picture pictures[];
+        int nPics;
+        public MiniBatch(Picture pictures[], int nPics){
+            this.pictures = pictures;
+            this.nPics = nPics;
+        }
+    }
     
 }
