@@ -51,7 +51,6 @@ public class GUI
         System.out.println();
 
         return createResizedCopy(image,(int)(28 * 4), (int)(28 * 4),false);
-        //return image;
     }
 
     public void displayData(Data data, ArrayList<double[]> output){

@@ -315,14 +315,14 @@ public class DynamicNeuralNetwork
         return a;
     }
 
-//    public double[] sigmoid_prime(double[] z){
-//        double s[] = new double[HIDDEN_NEURONS];
-//        double result[] = new double[HIDDEN_NEURONS];
-//        s = sigmoid(z);
-//        for(int i = 0; i < z.length; i++)
-//            result[i] = s[i] * (1-s[i]);
-//        return result;  
-//    }
+    public double[] sigmoid_prime(double[] z){
+        double s[] 		= new double[z.length];
+        double result[] = new double[z.length];
+        s = sigmoid(z);
+        for(int i = 0; i < z.length; i++)
+            result[i] = s[i] * (1-s[i]);
+        return result;  
+    }
 
     
     /**
