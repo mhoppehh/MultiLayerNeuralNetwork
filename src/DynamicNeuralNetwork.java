@@ -78,32 +78,43 @@ public class DynamicNeuralNetwork
     	
     }
     
-/*
-    public double[] feedForward(double [] a){
-        double output[] = new double[OUTPUT_NEURONS];
-        double sum;
-        double temp[] = new double[HIDDEN_NEURONS];
-        double temp2[] = new double[OUTPUT_NEURONS];
 
-        for(int i = 0; i < HIDDEN_NEURONS; i++){
+    public double[] feedForward(double [] a){//check temps
+        double output[] = new double[NUMBER_OUTPUT_NEURONS];
+        double sum;
+        double temp[] = new double[NUMBER_HIDDEN_NEURONS[0]];
+        double temp2[] = new double[NUMBER_OUTPUT_NEURONS];
+
+        for(int i = 0; i < NUMBER_HIDDEN_NEURONS[0]; i++){
             sum = 0;
-            for(int j = 0; j < INPUT_NEURONS; j++)
-                sum += nn.hidden[i].weights[j] * a[j];
-            temp[i] = sum + nn.hidden[i].bias;
+            for(int j = 0; j < NUMBER_INPUT_NEURONS; j++)
+                sum += nn.hidden[0][i].weights[j] * a[j];
+            temp[i] = sum + nn.hidden[0][i].bias;
         }
         temp = sigmoid(temp);
+        
+//        for (int h = 0; h < NUMBER_HIDDEN_NEURONS.length; h++) {
+//        	
+//		    for(int i = 0; i < NUMBER_HIDDEN_NEURONS[0]; i++){
+//		        sum = 0;
+//		        for(int j = 0; j < NUMBER_INPUT_NEURONS; j++)
+//		            sum += nn.hidden[0][i].weights[j] * temp[j];
+//		        temp2[i] = sum + nn.hidden[0][i].bias;
+//		    }
+//		    temp2 = sigmoid(temp2);
+//		    
+//        }
 
 
-        for(int i = 0; i < OUTPUT_NEURONS; i++){
+        for(int i = 0; i < NUMBER_OUTPUT_NEURONS; i++){
             sum = 0;
-            for(int j = 0; j < HIDDEN_NEURONS; j++)
+            for(int j = 0; j < NUMBER_HIDDEN_NEURONS[NUMBER_HIDDEN_NEURONS.length - 1]; j++)
                 sum += nn.output[i].weights[j] * temp[j];
             temp2[i] = sum + nn.output[i].bias;
         }
         output = sigmoid(temp2);
         return output;
     }
-*/
     
 /*
     public void backprop(Picture p){
