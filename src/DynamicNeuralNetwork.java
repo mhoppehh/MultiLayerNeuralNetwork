@@ -78,6 +78,108 @@ public class DynamicNeuralNetwork
     	
     }
     
+/*
+    public double[] feedForward(double [] a){
+        double output[] = new double[OUTPUT_NEURONS];
+        double sum;
+        double temp[] = new double[HIDDEN_NEURONS];
+        double temp2[] = new double[OUTPUT_NEURONS];
+
+        for(int i = 0; i < HIDDEN_NEURONS; i++){
+            sum = 0;
+            for(int j = 0; j < INPUT_NEURONS; j++)
+                sum += nn.hidden[i].weights[j] * a[j];
+            temp[i] = sum + nn.hidden[i].bias;
+        }
+        temp = sigmoid(temp);
+
+
+        for(int i = 0; i < OUTPUT_NEURONS; i++){
+            sum = 0;
+            for(int j = 0; j < HIDDEN_NEURONS; j++)
+                sum += nn.output[i].weights[j] * temp[j];
+            temp2[i] = sum + nn.output[i].bias;
+        }
+        output = sigmoid(temp2);
+        return output;
+    }
+*/
+    
+/*
+    public void backprop(Picture p){
+        double sum = 0;
+        double zh[] = new double[HIDDEN_NEURONS];
+        double ah[] = new double[HIDDEN_NEURONS];
+        double zo[] = new double[OUTPUT_NEURONS];
+        double ao[] = new double[OUTPUT_NEURONS];
+
+        for(int i = 0; i < HIDDEN_NEURONS; i++){
+            sum = 0;
+            for(int j = 0; j < INPUT_NEURONS; j++)
+                sum += nn.hidden[i].weights[j] * p.pixels[j];
+            zh[i] = sum + nn.hidden[i].bias;
+        }
+        ah = sigmoid(zh);
+
+        for(int i = 0; i < OUTPUT_NEURONS; i++){
+            sum = 0;
+            for(int j = 0; j < HIDDEN_NEURONS; j++)
+                sum += nn.output[i].weights[j] * ah[j];
+            zo[i] = sum + nn.output[i].bias;
+        }
+        ao = sigmoid(zo);
+
+        double dHidden[] = new double[HIDDEN_NEURONS];
+        double dOutput[] = new double[OUTPUT_NEURONS];
+
+        double c_d[] = new double[OUTPUT_NEURONS];
+        double s_p[] = new double[OUTPUT_NEURONS];
+        int y[] = p.output;
+        c_d = cost_derivative(zo, y);
+        s_p = sigmoid_prime(zo);
+        for(int i = 0; i < OUTPUT_NEURONS; i++){
+            dOutput[i] = c_d[i] * s_p[i];
+            for(int j = 0;  j < HIDDEN_NEURONS; j++)
+                nn.output[i].dWeights[j] = ah[j] * dOutput[i];
+            nn.output[i].dBias = dOutput[i];
+        }
+
+        double s_ph[] = new double[HIDDEN_NEURONS];
+        s_ph = sigmoid_prime(zh);
+        for(int i = 0; i < HIDDEN_NEURONS; i++){
+            double G = 0;
+            for(int j = 0; j < OUTPUT_NEURONS; j++)
+                G += dOutput[j] * nn.output[j].weights[i];
+            dHidden[i] = G * s_ph[i];
+
+            for(int j = 0; j < INPUT_NEURONS; j++)
+                nn.hidden[i].dWeights[j] = p.pixels[j]*dHidden[i];
+            nn.hidden[i].dBias = dHidden[i];
+        }
+    }*/
+    
+    public int evaluate(Data testData){
+        int n = (int)(testData.nPics);
+        int sum = 0;
+        for(int i = 0; i < n; i++)
+        {
+            Picture p = testData.data[i];
+            double output[] = new double[NUMBER_OUTPUT_NEURONS];
+            for(int j = 0; j < NUMBER_OUTPUT_NEURONS; j++)
+                output[j] = 0.0;
+            //output = feedForward(p.pixels);
+            int r = maxd(output);
+            int why = maxi(p.output);
+            if (r == why){
+                sum++;
+            }
+            else{
+                store(p, output);
+            }
+        }
+        return sum;
+    }
+    
     void updateMiniBatch(MiniBatch batch, int eta){
         int n = batch.nPics;
 
