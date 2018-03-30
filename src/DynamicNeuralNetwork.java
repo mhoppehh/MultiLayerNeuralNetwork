@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DynamicNeuralNetwork
 {
@@ -46,7 +47,7 @@ public class DynamicNeuralNetwork
         int LEARNING_RATE = 3;
         
         System.out.println("Training / Testing network...");
-        //SGD(d, EPOCHS, M_BATCH_SIZE, LEARNING_RATE, t);
+        SGD(d, EPOCHS, M_BATCH_SIZE, LEARNING_RATE, test_data);
 
         System.out.println("Elapsed time was " + stopTimer() / 1000 + " seconds.");
     	
@@ -69,8 +70,8 @@ public class DynamicNeuralNetwork
             }
 
             if(testData != null){
-//                int result = evaluate(testData);
-//                System.out.println("Epoch " + (e + 1) + " : " + result + " / " + testData.nPics);
+                int result = evaluate(testData);
+                System.out.println("Epoch " + (e + 1) + " : " + result + " / " + testData.nPics);
             }
             else
                 System.out.println("Epoch " + (e + 1) + " complete.");
@@ -79,11 +80,11 @@ public class DynamicNeuralNetwork
     }
     
 
-    public double[] feedForward(double [] a){//check temps
+    public double[] feedForward(double [] a){//Highly suspect
         double output[] = new double[NUMBER_OUTPUT_NEURONS];
         double sum;
         double temp[] = new double[NUMBER_HIDDEN_NEURONS[0]];
-        double temp2[] = new double[NUMBER_OUTPUT_NEURONS];
+        double temp2[];
 
         for(int i = 0; i < NUMBER_HIDDEN_NEURONS[0]; i++){
             sum = 0;
@@ -93,19 +94,20 @@ public class DynamicNeuralNetwork
         }
         temp = sigmoid(temp);
         
-//        for (int h = 0; h < NUMBER_HIDDEN_NEURONS.length; h++) {
-//        	
-//		    for(int i = 0; i < NUMBER_HIDDEN_NEURONS[0]; i++){
-//		        sum = 0;
-//		        for(int j = 0; j < NUMBER_INPUT_NEURONS; j++)
-//		            sum += nn.hidden[0][i].weights[j] * temp[j];
-//		        temp2[i] = sum + nn.hidden[0][i].bias;
-//		    }
-//		    temp2 = sigmoid(temp2);
-//		    
-//        }
+        for (int h = 0; h < NUMBER_HIDDEN_NEURONS.length - 1; h++) {
+        	temp2 = new double[NUMBER_HIDDEN_NEURONS[h + 1]];
+		    for(int i = 0; i < NUMBER_HIDDEN_NEURONS[h + 1]; i++){
+		        sum = 0;
+		        for(int j = 0; j < NUMBER_HIDDEN_NEURONS[h]; j++)
+		            sum += nn.hidden[h + 1][i].weights[j] * temp[j];
+		        temp2[i] = sum + nn.hidden[h + 1][i].bias;
+		    }
+		    temp2 = sigmoid(temp2);
+		    
+		    temp = Arrays.copyOf(temp2, temp2.length);
+        }
 
-
+        temp2 = new double[NUMBER_OUTPUT_NEURONS];
         for(int i = 0; i < NUMBER_OUTPUT_NEURONS; i++){
             sum = 0;
             for(int j = 0; j < NUMBER_HIDDEN_NEURONS[NUMBER_HIDDEN_NEURONS.length - 1]; j++)
@@ -178,7 +180,7 @@ public class DynamicNeuralNetwork
             double output[] = new double[NUMBER_OUTPUT_NEURONS];
             for(int j = 0; j < NUMBER_OUTPUT_NEURONS; j++)
                 output[j] = 0.0;
-            //output = feedForward(p.pixels);
+            output = feedForward(p.pixels);
             int r = maxd(output);
             int why = maxi(p.output);
             if (r == why){
